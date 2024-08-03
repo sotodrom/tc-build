@@ -43,7 +43,8 @@ send_file() {
 
 # Building LLVM's
 msg "Building LLVM's ..."
-send_msg "<b>Start build RastaMod69 Clang from <code>[ $BRANCH ]</code> branch</b>"
+send_msg "<b>🛠️ Start build ElectroWizard Clang from <code>[ $BRANCH ]</code> branch</b>"
+send_msg "<b>Building LLVM. . .</b>"
 ./build-llvm.py \
     --defines LLVM_PARALLEL_COMPILE_JOBS="$(nproc)" LLVM_PARALLEL_LINK_JOBS="$(nproc)" CMAKE_C_FLAGS=-O3 CMAKE_CXX_FLAGS=-O3 \
     --install-folder "$HOME_DIR/install" \
@@ -53,7 +54,7 @@ send_msg "<b>Start build RastaMod69 Clang from <code>[ $BRANCH ]</code> branch</
     --ref "$BRANCH" \
     --shallow-clone \
     --targets AArch64 ARM X86 \
-    --vendor-string "RastaMod69"
+    --vendor-string "ElectroWizard"
 
 # Check if the final clang binary exists or not
 for file in install/bin/clang-[1-9]*; do
@@ -68,6 +69,7 @@ done
 
 # Build binutils
 msg "Build binutils ..."
+send_msg "<b>🔨 Building binutils. . .</b>"
 ./build-binutils.py \
     --install-folder "$HOME_DIR/install" \
     --targets arm aarch64 x86_64
@@ -91,8 +93,8 @@ for bin in $(find install -mindepth 2 -maxdepth 3 -type f -exec file {} \; | gre
 done
 
 # Git config
-git config --global user.name "Edwiin Kusuma Jaya"
-git config --global user.email "kutemeikito0905@gmail.com"
+git config --global user.name "Tiktodz"
+git config --global user.email "dotkit@electrowizard.me"
 
 # Get Clang Info
 pushd "$HOME_DIR"/src/llvm-project || exit
@@ -102,9 +104,9 @@ popd || exit
 llvm_commit_url="https://github.com/llvm/llvm-project/commit/$short_llvm_commit"
 clang_version="$("$HOME_DIR"/install/bin/clang --version | head -n1 | cut -d' ' -f4)"
 build_date="$(TZ=Asia/Jakarta date +"%Y-%m-%d")"
-tags="RastaMod69-Clang-$clang_version-release"
-file="RastaMod69-Clang-$clang_version.tar.gz"
-clang_link="https://github.com/kutemeikito/RastaMod69-Clang/releases/download/$tags/$file"
+tags="ElectroWizard-Clang-$clang_version-release"
+file="ElectroWizard-Clang-$clang_version.tar.gz"
+clang_link="https://github.com/Tiktodz/electrowizard-clang/releases/download/$tags/$file"
 
 # Get binutils version
 binutils_version=$(grep "LATEST_BINUTILS_RELEASE" build-binutils.py)
@@ -124,7 +126,7 @@ tar -czvf ../"$file" .
 popd || exit
 
 # Push
-git clone "https://kutemeikito:$GIT_TOKEN@github.com/kutemeikito/RastaMod69-Clang.git" rel_repo
+git clone "https://Tiktodz:$GIT_TOKEN@github.com/Tiktodz/electrowizard-clang.git" rel_repo
 pushd rel_repo || exit
 if [ -d "$BRANCH" ]; then
     echo "$clang_link" >"$BRANCH"/link.txt
@@ -135,7 +137,7 @@ else
     cp -r "$HOME_DIR"/install/README.md "$BRANCH"
 fi
 git add .
-git commit -asm "RastaMod69-Clang-$clang_version: $(TZ=Asia/Jakarta date +"%Y%m%d")"
+git commit -asm "ElectroWizard-Clang-$clang_version: $(TZ=Asia/Jakarta date +"%Y%m%d")"
 git push -f origin main
 
 # Check tags already exists or not
@@ -148,15 +150,15 @@ failed=n
 if [ "$overwrite" == "y" ]; then
     ./github-release edit \
         --security-token "$GIT_TOKEN" \
-        --user "kutemeikito" \
-        --repo "RastaMod69-Clang" \
+        --user "Tiktodz" \
+        --repo "electrowizard-clang" \
         --tag "$tags" \
         --description "$(cat "$HOME_DIR"/install/README.md)"
 
     ./github-release upload \
         --security-token "$GIT_TOKEN" \
-        --user "kutemeikito" \
-        --repo "RastaMod69-Clang" \
+        --user "Tiktodz" \
+        --repo "electrowizard-clang" \
         --tag "$tags" \
         --name "$file" \
         --file "$HOME_DIR/$file" \
@@ -164,15 +166,15 @@ if [ "$overwrite" == "y" ]; then
 else
     ./github-release release \
         --security-token "$GIT_TOKEN" \
-        --user "kutemeikito" \
-        --repo "RastaMod69-Clang" \
+        --user "Tiktodz" \
+        --repo "electrowizard-clang" \
         --tag "$tags" \
         --description "$(cat "$HOME_DIR"/install/README.md)"
 
     ./github-release upload \
         --security-token "$GIT_TOKEN" \
-        --user "kutemeikito" \
-        --repo "RastaMod69-Clang" \
+        --user "Tiktodz" \
+        --repo "electrowizard-clang" \
         --tag "$tags" \
         --name "$file" \
         --file "$HOME_DIR/$file" || failed=y
@@ -184,8 +186,8 @@ while [ "$failed" == "y" ]; do
     msg "Upload again"
     ./github-release upload \
         --security-token "$GIT_TOKEN" \
-        --user "kutemeikito" \
-        --repo "RastaMod69-Clang" \
+        --user "Tiktodz" \
+        --repo "electrowizard-clang" \
         --tag "$tags" \
         --name "$file" \
         --file "$HOME_DIR/$file" \
@@ -194,15 +196,15 @@ done
 
 # Send message to telegram
 send_msg "
-<b>========== Quick Info ==========</b>
-<b>Build Date : </b>
+<b>==========📑 Quick Info ==========</b>
+<b>📆 Build Date : </b>
 * <code>$build_date</code>
-<b>Clang Version : </b>
+<b>📦 Clang Version : </b>
 * <code>$clang_version</code>
-<b>Binutils Version : </b>
+<b>📦 Binutils Version : </b>
 * <code>$binutils_version</code>
-<b>Compile Based : </b>
+<b>💾 Compile Based : </b>
 * <a href='$llvm_commit_url'>$llvm_commit_url</a>
-<b>Push Repository : </b>
-* <a href='https://github.com/kutemeikito/RastaMod69-Clang.git'>RastaMod69-Clang</a>
-<b>===============================</b>"
+<b>🆙 Push Repository : </b>
+* <a href='https://github.com/Tiktodz/electrowizard-clang.git'>ElectroWizard-Clang</a>
+<b>=================================</b>"
