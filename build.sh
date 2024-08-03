@@ -57,7 +57,7 @@ send_msg "<b>Building LLVM. . .</b>"
     --vendor-string "ElectroWizard"
 
 # Check if the final clang binary exists or not
-for file in install/bin/clang-[1-9]*; do
+for file in install/bin/clang-1*; do
     if [ -e "$file" ]; then
         msg "LLVM's build successful"
     else
