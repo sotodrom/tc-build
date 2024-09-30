@@ -2,7 +2,7 @@ name: LLVM Toolchain
 on:
   push:
     branches:
-      - main
+      - llvm
 
 jobs:
   build:
