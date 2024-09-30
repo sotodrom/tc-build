@@ -1,4 +1,4 @@
-name: LLVM Toolchain
+name: Build LLVM Toolchain
 on:
   push:
     branches:
