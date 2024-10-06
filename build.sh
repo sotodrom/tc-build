@@ -43,8 +43,7 @@ send_file() {
 
 # Building LLVM's
 msg "Building LLVM's ..."
-send_msg "<b>🛠️ Start build ElectroWizard Clang from <code>[ $BRANCH ]</code> branch</b>"
-send_msg "<b>Building LLVM. . .</b>"
+send_msg "<b>🛠️ Building LLVM. . .</b>"
 ./build-llvm.py \
     --defines LLVM_PARALLEL_COMPILE_JOBS="$(nproc)" LLVM_PARALLEL_LINK_JOBS="$(nproc)" CMAKE_C_FLAGS=-O3 CMAKE_CXX_FLAGS=-O3 \
     --install-folder "$HOME_DIR/install" \
@@ -141,7 +140,7 @@ git commit -asm "ElectroWizard-Clang-$clang_version: $(TZ=Asia/Jakarta date +"%Y
 git push -f origin main
 
 # Check tags already exists or not
-overwrite=y
+overwrite=n
 git tag -l | grep "$tags" || overwrite=n
 popd || exit
 
