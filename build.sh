@@ -140,7 +140,7 @@ git commit -asm "ElectroWizard-Clang-$clang_version: $(TZ=Asia/Jakarta date +"%Y
 git push -f origin main
 
 # Check tags already exists or not
-overwrite=n
+overwrite=y
 git tag -l | grep "$tags" || overwrite=n
 popd || exit
 
