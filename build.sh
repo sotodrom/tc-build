@@ -52,7 +52,7 @@ send_msg "<b>🛠️ Building LLVM. . .</b>"
     --quiet-cmake \
     --ref "$BRANCH" \
     --shallow-clone \
-    --targets AArch64 ARM X86 \
+    --targets AArch64 ARM X86 clang polly lld lto pgo bolt mlgo \
     --vendor-string "ElectroWizard"
 
 # Check if the final clang binary exists or not
