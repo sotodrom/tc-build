@@ -22,6 +22,7 @@ msg "- All environment variables are set."
 # Get home directory
 HOME_DIR="$(pwd)"
 
+export NPROC="$(nproc --all)"
 export CUSTOM_FLAGS="
   LLVM_PARALLEL_TABLEGEN_JOBS=${NPROC}
   LLVM_PARALLEL_COMPILE_JOBS=${NPROC}
