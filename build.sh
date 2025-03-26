@@ -45,14 +45,16 @@ send_file() {
 msg "Building LLVM's ..."
 send_msg "<b>🛠️ Building LLVM. . .</b>"
 ./build-llvm.py \
-    --defines LLVM_PARALLEL_COMPILE_JOBS="$(nproc)" LLVM_PARALLEL_LINK_JOBS="$(nproc)" CMAKE_C_FLAGS=-O3 CMAKE_CXX_FLAGS=-O3 \
+    --defines LLVM_PARALLEL_COMPILE_JOBS="$(nproc)" LLVM_PARALLEL_LINK_JOBS="$(nproc)" LLVM_OPTIMIZED_TABLEGEN=ON CMAKE_C_FLAGS=-O3 -pipe -ffunction-sections -fdata-sections -fno-plt -fmerge-all-constants -fomit-frame-pointer -funroll-loops -falign-functions=64 -march=haswell -mtune=diamondrapids -mllvm -polly -mllvm -polly-position=early -mllvm -polly-vectorizer=stripmine -mllvm -polly-run-dce CMAKE_CXX_FLAGS=-O3 -pipe -ffunction-sections -fdata-sections -fno-plt -fmerge-all-constants -fomit-frame-pointer -funroll-loops -falign-functions=64 -march=haswell -mtune=diamondrapids -mllvm -polly -mllvm -polly-position=early -mllvm -polly-vectorizer=stripmine -mllvm -polly-run-dce CMAKE_EXE_LINKER_FLAGS=-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug CMAKE_MODULE_LINKER_FLAGS=-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug CMAKE_SHARED_LINKER_FLAGS=-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug CMAKE_STATIC_LINKER_FLAGS=-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug \
     --install-folder "$HOME_DIR/install" \
+    --lto thin \
+    --pgo llvm \
+    --projects clang lld polly \
     --no-update \
     --no-ccache \
-    --quiet-cmake \
     --ref "$BRANCH" \
     --shallow-clone \
-    --targets AArch64 ARM X86 clang polly lld lto pgo bolt mlgo \
+    --targets AArch64 ARM X86 \
     --vendor-string "ElectroWizard"
 
 # Check if the final clang binary exists or not
