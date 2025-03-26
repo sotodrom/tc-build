@@ -52,6 +52,7 @@ send_msg "<b>🛠️ Building LLVM. . .</b>"
     --projects clang lld polly \
     --no-update \
     --no-ccache \
+    --quiet-cmake \
     --ref "$BRANCH" \
     --shallow-clone \
     --targets AArch64 ARM X86 \
