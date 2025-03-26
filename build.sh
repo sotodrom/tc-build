@@ -58,8 +58,6 @@ send_file() {
 msg "Building LLVM's ..."
 send_msg "<b>🛠️ Building LLVM. . .</b>"
 ./build-llvm.py \
-    --build-type "Release" \
-    --build-stage1-only \
     --defines "${CUSTOM_FLAGS}" \
     --install-folder "$HOME_DIR/install" \
     --lto thin \
