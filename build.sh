@@ -22,6 +22,19 @@ msg "- All environment variables are set."
 # Get home directory
 HOME_DIR="$(pwd)"
 
+export CUSTOM_FLAGS="
+  LLVM_PARALLEL_TABLEGEN_JOBS=${NPROC}
+  LLVM_PARALLEL_COMPILE_JOBS=${NPROC}
+  LLVM_PARALLEL_LINK_JOBS=${NPROC}
+  LLVM_OPTIMIZED_TABLEGEN=ON
+  CMAKE_C_FLAGS='-O3 -pipe -ffunction-sections -fdata-sections -fno-plt -fmerge-all-constants -fomit-frame-pointer -funroll-loops -falign-functions=64 -march=haswell -mtune=diamondrapids -mllvm -polly -mllvm -polly-position=early -mllvm -polly-vectorizer=stripmine -mllvm -polly-run-dce'
+  CMAKE_CXX_FLAGS='-O3 -pipe -ffunction-sections -fdata-sections -fno-plt -fmerge-all-constants -fomit-frame-pointer -funroll-loops -falign-functions=64 -march=haswell -mtune=diamondrapids -mllvm -polly -mllvm -polly-position=early -mllvm -polly-vectorizer=stripmine -mllvm -polly-run-dce'
+  CMAKE_EXE_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug'
+  CMAKE_MODULE_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug'
+  CMAKE_SHARED_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug'
+  CMAKE_STATIC_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug'
+  "
+
 # Telegram Setup
 git clone --depth=1 https://github.com/XSans0/Telegram Telegram
 
@@ -45,7 +58,9 @@ send_file() {
 msg "Building LLVM's ..."
 send_msg "<b>🛠️ Building LLVM. . .</b>"
 ./build-llvm.py \
-    --defines LLVM_PARALLEL_COMPILE_JOBS="$(nproc)" LLVM_PARALLEL_LINK_JOBS="$(nproc)" LLVM_OPTIMIZED_TABLEGEN=ON CMAKE_C_FLAGS='-O3 -pipe -ffunction-sections -fdata-sections -fno-plt -fmerge-all-constants -fomit-frame-pointer -funroll-loops -falign-functions=64 -march=haswell -mtune=diamondrapids -mllvm -polly -mllvm -polly-position=early -mllvm -polly-vectorizer=stripmine -mllvm -polly-run-dce' CMAKE_CXX_FLAGS='-O3 -pipe -ffunction-sections -fdata-sections -fno-plt -fmerge-all-constants -fomit-frame-pointer -funroll-loops -falign-functions=64 -march=haswell -mtune=diamondrapids -mllvm -polly -mllvm -polly-position=early -mllvm -polly-vectorizer=stripmine -mllvm -polly-run-dce' CMAKE_EXE_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug' CMAKE_MODULE_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug' CMAKE_SHARED_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug' CMAKE_STATIC_LINKER_FLAGS='-Wl,-O3,--lto-O3,--lto-CGO3,--gc-sections,--strip-debug' \
+    --build-type "Release" \
+    --build-stage1-only \
+    --defines "${CUSTOM_FLAGS}" \
     --install-folder "$HOME_DIR/install" \
     --lto thin \
     --pgo llvm \
